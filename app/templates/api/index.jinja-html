@@ -1,0 +1,21 @@
+{% extends 'api/base/base.jinja-html' %}
+{% block title %}Trendit³ - {{ super() }}{% endblock %}
+
+{% block content %}
+
+<div class="h-full flex flexCenter">
+    <div class="card api-box">
+        <div class="logo fitImg">
+            <img src="{{ url_for('static', filename='img/api-setup.jpg') }}" alt="API Logo">
+        </div>
+        <h1 class="title"> API Setup </h1>
+        <p> API Setup is a basic setup of an API built with Python and Flask. This setup saves you the time of building all from scratch. </p>
+
+        <div class="buttons-box">
+            <a class="btn pill" href="{{ url_for('swagger_ui.show') }}" target="_blank"> View Docs </a>
+            <a class="btn ghost-pill" href="#"> View Website </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
