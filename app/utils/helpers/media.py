@@ -27,13 +27,13 @@ from config import Config
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp', '.svg'}
 VIDEO_EXTENSIONS = {'.mp4', '.avi', '.mov', '.flv'}
 
-def get_folder_path():
+def get_folder_path() -> str:
     """Generate the folder path based on the current date."""
     year = str(date.today().year)
     month = str(date.today().month).zfill(2)
     return f"{year}/{month}"
 
-def validate_file_extension(extension):
+def validate_file_extension(extension) -> str:
     """Validate the file extension and determine resource type."""
     if extension.lower() in IMAGE_EXTENSIONS:
         return "image"
@@ -56,10 +56,10 @@ def upload_to_cloudinary(media_file: FileStorage, new_media_name, folder_path, r
         raise e
     
 
-def save_media_to_db(media_name: str, original_media_path: str):
+def save_media_to_db(media_name: str, original_media_path: str) -> Media:
     """Save the media record to the database."""
     try:
-        new_media = Media(filename=media_name, media_path=original_media_path)
+        new_media: Media = Media(filename=media_name, media_path=original_media_path)
         db.session.add(new_media)
         db.session.commit()
         return new_media
@@ -88,19 +88,19 @@ def save_media(media_file, filename=None) -> Media:
     
     
     # Generate a random string and append it to the original file name
-    rand_string = generate_random_string(8)
-    media_name = secure_filename(filename) if filename else secure_filename(media_file.filename) # Grab file name of the selected media
+    rand_string: str = generate_random_string(8)
+    media_name: str = secure_filename(filename) if filename else secure_filename(media_file.filename) # Grab file name of the selected media
     the_media_name, the_media_ext = os.path.splitext(os.path.basename(media_name)) # get the file name and extension
-    new_media_name = f"{the_media_name}-{rand_string}"
+    new_media_name: str = f"{the_media_name}-{rand_string}"
     
     
-    folder_path = get_folder_path() # create the path were image will be stored
+    folder_path: str = get_folder_path() # create the path were image will be stored
     resource_type = validate_file_extension(the_media_ext) # Check the file type and set the resource_type accordingly
     
     # Upload the media to Cloudinary
     upload_result = upload_to_cloudinary(media_file, new_media_name, folder_path, resource_type)
     
-    original_media_path = upload_result['secure_url'] # Get the URL of the uploaded media
+    original_media_path: str = upload_result['secure_url'] # Get the URL of the uploaded media
     
     # Add the media properties to database
     new_media = save_media_to_db(media_name, original_media_path)
@@ -108,11 +108,20 @@ def save_media(media_file, filename=None) -> Media:
     return new_media
 
 
-def save_media_files_to_temp(media_files):
+def save_media_files_to_temp(media_files) -> list:
     temp_dir = tempfile.mkdtemp()
     media_file_paths = []
-
-    for media_file in media_files:
+    
+    console_log("media files", media_files)
+    if isinstance(media_files, list):
+        
+        for media_file in media_files:
+            filename = secure_filename(media_file.filename)
+            file_path = os.path.join(temp_dir, filename)
+            media_file.save(file_path)
+            media_file_paths.append(file_path)
+    else:
+        media_file = media_files
         filename = secure_filename(media_file.filename)
         file_path = os.path.join(temp_dir, filename)
         media_file.save(file_path)
