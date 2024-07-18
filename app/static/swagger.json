@@ -1,7 +1,8 @@
 {
 	"swagger": "2.0",
 	"info": {
-		"title": "API Setup",
+		"title": "QUAS (Quick API SETUP)",
+		"description": "A basic API setup using Flask, intended for rapid project initiation.",
 		"version": "1.0.0",
 		"contact": {
 			"email": "zeddyemy@gmail.com"
@@ -23,32 +24,10 @@
 	],
 
 	"paths": {
-		"/users": {
-			"get": {
-				"tags": ["API"],
-				"summary": "Get all users",
-				"responses": {
-					"200": {
-						"description": "A list of users",
-						"schema": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"id": { "type": "integer" },
-									"username": { "type": "string" },
-									"email": { "type": "string" }
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/user": {
+		"/api/signup": {
 			"post": {
 				"tags": ["API"],
-				"summary": "Create a new user",
+				"summary": "Register new User",
 				"parameters": [
 					{
 						"name": "body",
@@ -57,14 +36,119 @@
 							"type": "object",
 							"properties": {
 								"username": { "type": "string" },
-								"email": { "type": "string" }
+								"email": { "type": "string" },
+								"firstname": { "type": "string" },
+								"lastname": { "type": "string" },
+								"password": { "type": "string" }
 							}
 						}
 					}
 				],
 				"responses": {
-					"201": {
-						"description": "User created"
+					"200": {
+						"description": "Sign up Details",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"message": { "type": "string" },
+								"status": {
+									"type": "string",
+									"enum": ["success", "failed"],
+									"example": "success"
+								},
+								"status_code": {
+									"type": "integer",
+									"enum": [200, 400, 409],
+									"example": 200
+								},
+								"access_token": { "type": "string" },
+								"user_data": {
+									"type": "object",
+									"properties": {
+										"username": { "type": "string" },
+										"email": { "type": "string" },
+										"roles": {
+											"type": "array",
+											"items": { "type": "string" },
+											"enum": [
+												"Admin",
+												"Junior Admin",
+												"Customer"
+											],
+											"example": [
+												"Super Admin",
+												"Admin",
+												"Junior Admin",
+												"Customer"
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/login": {
+			"post": {
+				"tags": ["API"],
+				"summary": "Login to App",
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"email_username": { "type": "string" },
+								"password": { "type": "string" }
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Login details",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"message": { "type": "string" },
+								"status": {
+									"type": "string",
+									"enum": ["success", "failed"],
+									"example": "success"
+								},
+								"status_code": {
+									"type": "integer",
+									"enum": [200, 400, 409],
+									"example": 200
+								},
+								"access_token": { "type": "string" },
+								"user_data": {
+									"type": "object",
+									"properties": {
+										"username": { "type": "string" },
+										"email": { "type": "string" },
+										"roles": {
+											"type": "array",
+											"items": { "type": "string" },
+											"enum": [
+												"Admin",
+												"Junior Admin",
+												"Customer"
+											],
+											"example": [
+												"Super Admin",
+												"Admin",
+												"Junior Admin",
+												"Customer"
+											]
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}

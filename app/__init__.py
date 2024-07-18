@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
-from .extensions import db, limiter, jwt_extended, migration
+from .extensions import db, limiter, jwt_extended, migration, mail
 from config import Config, config_by_name, configure_logging
 from .utils import set_access_control_allows
 from .models import create_roles
@@ -22,6 +22,7 @@ def create_app(config_name=Config.ENV):
     
     # Initialize Flask extensions
     db.init_app(app)
+    mail.init_app(app) # Initialize Flask-Mail
     limiter.init_app(app) # initialize rate limiter
     jwt = jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
     migrate = migration.init_app(app, db=db)
@@ -42,7 +43,7 @@ def create_app(config_name=Config.ENV):
     from .core.routes import register_all_blueprints
     register_all_blueprints(app)
     
-    with app.app_context():
-        create_roles()  # Create roles for trendit3
+    # with app.app_context():
+    #     create_roles()  # Create roles for trendit3
     
     return app

@@ -68,6 +68,24 @@ def generate_random_string(length=8):
     return ''.join(random.choice(characters) for _ in range(length))
 
 
+def generate_random_number(length: int = 6) -> int:
+    """Generates a random number of the specified length.
+
+    Args:
+        length: The desired length of the random number.
+
+    Returns:
+        A string representing the generated random number.
+    """
+
+    if length < 1:
+        raise ValueError("Length must be greater than 0")
+
+    rand_num = random.randint(10**(length-1), 10**length - 1)
+    
+    return rand_num
+
+
 def generate_slug(name: str, model: object, existing_obj=None) -> str:
     """
     Generates a unique slug for a given name based on the type of db model.
