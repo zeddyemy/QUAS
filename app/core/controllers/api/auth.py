@@ -16,7 +16,7 @@ from werkzeug.exceptions import UnsupportedMediaType
 from flask_jwt_extended import create_access_token, decode_token, get_jwt_identity
 from flask_jwt_extended.exceptions import JWTDecodeError
 from jwt import ExpiredSignatureError, DecodeError
-from email_validator import validate_email, EmailNotValidError
+from email_validator import validate_email, EmailNotValidError, ValidatedEmail
 
 from config import Config
 from ....extensions import db
@@ -122,14 +122,9 @@ class AuthController:
             email_username = data.get('email_username')
             pwd = data.get('password')
             
-            try:
-                email_info = validate_email(email_username, check_deliverability=False)
-
-                email = email_info.normalized
-                email_username = email.lower()
-
-            except EmailNotValidError as e:
-                email_username = email_username
+            # check if email_username is an email. And convert to lowercase if it's an email
+            email_info = validate_email(email_username, check_deliverability=False)
+            email_username = email_username.lower() if isinstance(email_info, ValidatedEmail) else email_username
             
             # get user from db with the email/username.
             user = get_app_user(email_username)
