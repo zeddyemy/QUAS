@@ -9,21 +9,18 @@ It includes methods for checking username, checking email, signing up, resending
 '''
 
 from datetime import timedelta
-from flask import request, make_response
+from flask import request
 from sqlalchemy.exc import ( IntegrityError, DataError, DatabaseError, InvalidRequestError, )
-from werkzeug.security import generate_password_hash
 from werkzeug.exceptions import UnsupportedMediaType
-from flask_jwt_extended import create_access_token, decode_token, get_jwt_identity
+from flask_jwt_extended import create_access_token
 from flask_jwt_extended.exceptions import JWTDecodeError
 from jwt import ExpiredSignatureError, DecodeError
 from email_validator import validate_email, EmailNotValidError, ValidatedEmail
 
-from config import Config
 from ....extensions import db
 from ....models import Role, RoleNames, AppUser, Address, Profile
 from ....utils.helpers.loggers import console_log, log_exception
 from ....utils.helpers.http_response import error_response, success_response
-from ....utils.helpers.basics import generate_random_number
 from ....utils.helpers.users import get_app_user
 
 
