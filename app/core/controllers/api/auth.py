@@ -10,7 +10,7 @@ It includes methods for checking username, checking email, signing up, resending
 
 from datetime import timedelta
 from flask import request
-from sqlalchemy.exc import ( IntegrityError, DataError, DatabaseError, InvalidRequestError, )
+from sqlalchemy.exc import ( IntegrityError, DataError, DatabaseError, InvalidRequestError, OperationalError )
 from werkzeug.exceptions import UnsupportedMediaType
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended.exceptions import JWTDecodeError
@@ -99,10 +99,20 @@ class AuthController:
             }
             
             api_response = success_response('Verification code sent successfully', 200, extra_data)
+        except IntegrityError as e:
+            db.session.rollback()
+            log_exception('Integrity Error:', e)
+            return error_response(f'User already exists: {str(e)}', 409)
+        except (DataError, DatabaseError, OperationalError) as e:
+            db.session.rollback()
+            log_exception('Error connecting to the database', e)
+            return error_response('Error interacting to the database.', 500)
         except Exception as e:
             db.session.rollback()
             log_exception(f"An exception occurred during registration", e)
             api_response = error_response('An unexpected error. Our developers are already looking into it.', 500)
+        finally:
+            db.session.close()
         
         return api_response
     
@@ -120,8 +130,13 @@ class AuthController:
             pwd = data.get('password')
             
             # check if email_username is an email. And convert to lowercase if it's an email
-            email_info = validate_email(email_username, check_deliverability=False)
-            email_username = email_username.lower() if isinstance(email_info, ValidatedEmail) else email_username
+            try:
+                email_info = validate_email(email_username, check_deliverability=False)
+                email_username = email_info.normalized
+                console_log("email_username", email_username)
+            except EmailNotValidError as e:
+                email_username = email_username
+            
             
             # get user from db with the email/username.
             user = get_app_user(email_username)
@@ -146,6 +161,10 @@ class AuthController:
         except UnsupportedMediaType as e:
             log_exception("An UnsupportedMediaType exception occurred", e)
             api_response = error_response("unsupported media type", 415)
+        except (DataError, DatabaseError, OperationalError) as e:
+            db.session.rollback()
+            log_exception('Error connecting to the database', e)
+            return error_response('Error interacting to the database.', 500)
         except Exception as e:
             log_exception("An exception occurred trying to login", e)
             api_response = error_response('An unexpected error. Our developers are already looking into it.', 500)

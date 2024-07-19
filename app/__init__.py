@@ -40,7 +40,7 @@ def create_app(config_name=Config.ENV):
     
     
     # Register blueprints
-    from .core.routes import register_all_blueprints
+    from .core import register_all_blueprints
     register_all_blueprints(app)
     
     # with app.app_context():
