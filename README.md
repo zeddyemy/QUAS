@@ -1,7 +1,9 @@
 # QUAS (Quick API Setup) with Flask
 
 ## Description
-A basic API setup using Flask, intended for rapid project initiation.
+A basic Quick API Setup using Flask, intended for rapid project initiation.
+
+This project is intended to be a starting point for future projects. It includes a structured organization of routes, controllers, models, and utility functions to save development time.
 
 ## Prerequisites
 
