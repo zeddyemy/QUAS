@@ -11,15 +11,20 @@ It sets up SQLAlchemy, Flask-Mail, and Celery with the configurations defined in
 
 # api = Api(version=1.0, doc='/swagger/doc')
 
+from flask import Flask
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
-from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 mail = Mail()
 db = SQLAlchemy()
 migration = Migrate()
 jwt_extended = JWTManager()
-limiter = Limiter(key_func=get_remote_address)
+
+def initialize_extensions(app: Flask):
+    db.init_app(app)
+    mail.init_app(app) # Initialize Flask-Mail
+    jwt = jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
+    migrate = migration.init_app(app, db=db)

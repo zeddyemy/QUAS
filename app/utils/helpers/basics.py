@@ -17,6 +17,7 @@ def url_parts(url):
     
     return theUrlParts
 
+
 def get_or_404(query):
     """
     Executes a query and returns the result, or aborts with a 404 error if no result is found.
@@ -36,6 +37,7 @@ def get_or_404(query):
         abort(404)
     
     return result
+
 
 def int_or_none(s):
     """
@@ -123,7 +125,7 @@ def generate_slug(name: str, model: object, existing_obj=None) -> str:
             raise ValueError(f"Unable to create a unique slug after {max_attempts} attempts.")
         
         suffix = generate_random_string(5)
-        slug = f"{base_slug}-{suffix}-{timestamp}" if counter == 2 else f"{base_slug}-{suffix}"
+        slug = f"{base_slug}-{suffix}-{timestamp}" if counter >= 2 else f"{base_slug}-{suffix}"
 
         # Check if the combination of slug and suffix is also taken
         # Use the helper function with the dynamically determined model type

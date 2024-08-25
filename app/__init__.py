@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
-from .extensions import db, limiter, jwt_extended, migration, mail
+from .extensions import initialize_extensions
 from config import Config, config_by_name, configure_logging
 from .utils import set_access_control_allows
 from .models import create_roles
@@ -21,12 +21,7 @@ def create_app(config_name=Config.ENV):
     app.config.from_object(config_by_name[config_name])
     
     # Initialize Flask extensions
-    db.init_app(app)
-    mail.init_app(app) # Initialize Flask-Mail
-    limiter.init_app(app) # initialize rate limiter
-    jwt = jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
-    migrate = migration.init_app(app, db=db)
-    
+    initialize_extensions(app)
     
     # Set up CORS. Allow '*' for origins.
     cors = CORS(app, resources={r"/*": {"origins": Config.CLIENT_ORIGINS}}, supports_credentials=True)

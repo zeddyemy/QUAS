@@ -11,7 +11,7 @@ as well as methods for password hashing and verification.
 
 from enum import Enum
 from sqlalchemy.orm import backref
-from datetime import datetime
+from ..utils.date_time import DateTimeUtils
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..extensions import db
@@ -23,7 +23,7 @@ class TempUser(db.Model):
     
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
-    date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_joined = db.Column(db.DateTime(timezone=True), nullable=False, default=DateTimeUtils.aware_utcnow)
     
     def __repr__(self) -> str:
         return f'<ID: {self.id}, email: {self.email}>'
@@ -41,13 +41,13 @@ class AppUser(db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     username = db.Column(db.String(50), nullable=True, unique=True)
     password_hash = db.Column(db.String(255), nullable=True)
-    date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     two_fa_secret = db.Column(db.String(255), nullable=True)
+    date_joined = db.Column(db.DateTime(timezone=True), nullable=False, default=DateTimeUtils.aware_utcnow)
     
     # Relationships
     profile = db.relationship('Profile', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
     address = db.relationship('Address', back_populates="app_user", uselist=False, cascade="all, delete-orphan")
-    roles = db.relationship('Role', secondary='user_roles', backref=db.backref('app_users', lazy='dynamic'), cascade="all, delete-orphan", single_parent=True)
+    roles = db.relationship('Role', secondary='user_roles', backref=db.backref('app_users', lazy='dynamic'), cascade="save-update, merge", single_parent=True)
     
     
     @property

@@ -1,4 +1,5 @@
 import os, logging
+from flask import Flask
 
 class Config:
     ENV = os.environ.get('ENV') or 'development'
@@ -23,9 +24,14 @@ config_by_name = {
     'development': DevelopmentConfig,
     'production': ProductionConfig
 }
-def configure_logging(app):
-    formatter = logging.Formatter('[%(asctime)s] ==> %(levelname)s in %(module)s: %(message)s')
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
-    app.logger.setLevel(logging.DEBUG)  # Set the desired logging level
+
+def configure_logging(app: Flask):
+    if not app.logger.handlers:
+        formatter = logging.Formatter("[%(asctime)s] ==> %(levelname)s in %(module)s: %(message)s")
+        
+        # Stream handler
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        app.logger.addHandler(stream_handler)
+        
+        app.logger.setLevel(logging.INFO)  # Set the desired logging level
