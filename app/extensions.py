@@ -18,6 +18,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_login import LoginManager, UserMixin, current_user
 
 from config import Config
 
@@ -27,6 +28,7 @@ db = SQLAlchemy()
 migration = Migrate()
 jwt_extended = JWTManager()
 limiter = Limiter(key_func=get_remote_address)
+login_manager = LoginManager()
 
 def initialize_extensions(app: Flask):
     db.init_app(app)
@@ -34,6 +36,14 @@ def initialize_extensions(app: Flask):
     limiter.init_app(app)
     migration.init_app(app, db=db)
     jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
+    
+    login_manager.init_app(app)
+    login_manager.login_view = 'cpanel.login'
+    
+    from .models import AppUser
+    @login_manager.user_loader
+    def load_user(user_id):
+        return AppUser.query.get(int(user_id))
     
     # Set up CORS. Allow '*' for origins.
     cors.init_app(app=app, resources={r"/*": {"origins": Config.CLIENT_ORIGINS}}, supports_credentials=True)

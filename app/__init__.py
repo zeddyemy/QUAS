@@ -3,6 +3,7 @@ from flask import Flask
 from .extensions import initialize_extensions
 from config import Config, config_by_name, configure_logging
 from .models import create_roles
+from .core.cpanel.setup import setup_flask_admin
 from .utils.hooks import register_hooks
 
 
@@ -19,21 +20,20 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
     
-    # Initialize Flask extensions
-    initialize_extensions(app)
+    initialize_extensions(app) # Initialize Flask extensions
+    
+    setup_flask_admin(app) # Set up flask admin
 
-    # Register before and after request hooks
-    register_hooks(app=app)
+    register_hooks(app=app) # Register before and after request hooks
     
-    
-    # Configure logging
-    configure_logging(app)
+    configure_logging(app) # Configure logging
     
     
     # Register blueprints
     from .blueprints import register_all_blueprints
     register_all_blueprints(app)
     
+    # create defaults
     if create_defaults:
         with app.app_context():
             create_roles()

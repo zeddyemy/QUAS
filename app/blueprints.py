@@ -2,6 +2,9 @@ from flask import Flask
 
 def register_all_blueprints(app: Flask) -> None:
     
+    from .core.cpanel.routes import cpanel_bp
+    app.register_blueprint(cpanel_bp)
+    
     from .core.web.routes import web_bp
     app.register_blueprint(web_bp)
     

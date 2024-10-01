@@ -1,5 +1,5 @@
 import random, string, logging, time
-from flask import current_app, abort, request
+from flask import current_app, abort, request, url_for
 from slugify import slugify
 
 def url_parts(url):
@@ -134,3 +134,8 @@ def generate_slug(name: str, model: object, existing_obj=None) -> str:
         counter += 1
 
     return slug
+
+
+def redirect_url(default='admin.index'):
+    return request.args.get('next') or request.referrer or \
+        url_for(default)
