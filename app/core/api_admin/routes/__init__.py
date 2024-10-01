@@ -6,11 +6,10 @@ A Flask blueprint named 'api_admin' is created to group these routes, and it is 
 
 @author: Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package: QUAS
 '''
 from flask import Blueprint
 
-admin_api_bp: Blueprint = Blueprint('admin_api', __name__, url_prefix='/api/admin')
+admin_api_bp: Blueprint = Blueprint('api_admin', __name__, url_prefix='/api/admin')
 
 # from . import auth, task_performance, dashboard, tasks, users, transactions, pricing, social_profile, wallet, stats
 

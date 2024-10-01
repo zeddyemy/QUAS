@@ -11,7 +11,7 @@ from flask import request
 from flask_jwt_extended import jwt_required
 
 from . import api_bp
-from ...controllers.api import AuthController
+from ..controllers import AuthController
 
 
 # REGISTRATION ENDPOINTS

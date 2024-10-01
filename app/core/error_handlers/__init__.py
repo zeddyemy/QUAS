@@ -15,7 +15,7 @@ from flask import Blueprint, Flask
 
 errors_bp = Blueprint('errorHandlers', __name__)
 
-from . import db_errors, http_errors, jwt_errors, rate_limit
+from . import db_errors, http_errors, jwt_errors, rate_limit, others
 
 
 # def register_error_handlers(app: Flask) -> None:

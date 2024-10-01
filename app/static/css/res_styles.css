@@ -104,6 +104,38 @@ body::after {
     clear: both;
     display: table;
 }
+p,li,figcaption {
+    text-wrap: pretty;
+    max-width: 68ch;
+}
+span {
+    font-family: var(--font-four);
+}
+header, main, footer, section, article {
+    container-type: inline-size;
+}
+a {
+    text-decoration: none;
+    color: var(--theme-clr);
+}
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    font-style: italic;
+    background-repeat: no-repeat;
+    background-size: cover;
+    shape-margin: 0.75rem;
+
+    filter: var(--brightness);
+    transition: var(--transition);
+    transform: scale(1.0);
+    object-fit: cover;
+}
+p {
+    font-family: var(--font-four);
+    margin-bottom: 1rem;
+}
 
 .wrapper {
     min-height: 100vh;
@@ -118,28 +150,13 @@ body::after {
     clear: both;
     display: table;
 }
-a {
-    text-decoration: none;
-    color: var(--theme-clr);
-}
-img {
-    filter: var(--brightness);
-    transition: var(--transition);
-    transform: scale(1.0);
-    object-fit: cover;
-}
-p {
-    font-family: var(--font-four);
-    margin-bottom: 1rem;
-}
+
 .title,h1,h2,h3,h4,h5 {
     font-family: var(--font-two);
     margin-bottom: 0.5rem;
     line-height: 1.4;
     transition: var(--transition);
-}
-span {
-    font-family: var(--font-four);
+    text-wrap: balance;
 }
 .title {
     font-size: var(--title-size);

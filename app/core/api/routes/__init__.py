@@ -1,13 +1,12 @@
 '''
-This package contains the API routes for the Flask application.
+This package contains the base API routes for the Flask application.
 
-It includes routes for authentication, payments, items, item interactions, location, task, task performance, profile, referral, religions, stats, and banks.
+It includes routes for authentication, payments, items, item interactions, location, profile, referral, religions, stats, e.t.c
 
 A Flask blueprint named 'api' is created to group these routes, and it is registered under the '/api' URL prefix.
 
 @author: Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package: QUAS
 '''
 from flask import Blueprint, render_template
 

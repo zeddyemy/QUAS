@@ -5,7 +5,6 @@ It sets up SQLAlchemy, Flask-Mail, and Celery with the configurations defined in
 
 @author: Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package: QUAS
 '''
 # from flask_restx import Api
 
@@ -13,18 +12,28 @@ It sets up SQLAlchemy, Flask-Mail, and Celery with the configurations defined in
 
 from flask import Flask
 from flask_mail import Mail
-from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+from config import Config
+
 mail = Mail()
+cors = CORS()
 db = SQLAlchemy()
 migration = Migrate()
 jwt_extended = JWTManager()
+limiter = Limiter(key_func=get_remote_address)
 
 def initialize_extensions(app: Flask):
     db.init_app(app)
-    mail.init_app(app) # Initialize Flask-Mail
-    jwt = jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
-    migrate = migration.init_app(app, db=db)
+    mail.init_app(app)
+    limiter.init_app(app)
+    migration.init_app(app, db=db)
+    jwt_extended.init_app(app) # Setup the Flask-JWT-Extended extension
+    
+    # Set up CORS. Allow '*' for origins.
+    cors.init_app(app=app, resources={r"/*": {"origins": Config.CLIENT_ORIGINS}}, supports_credentials=True)

@@ -1,13 +1,12 @@
 from flask import Flask
-from flask_cors import CORS
 
 from .extensions import initialize_extensions
 from config import Config, config_by_name, configure_logging
-from .utils import set_access_control_allows
 from .models import create_roles
+from .utils.hooks import register_hooks
 
 
-def create_app(config_name=Config.ENV):
+def create_app(config_name=Config.ENV, create_defaults=True):
     '''
     Creates and configures the Flask application instance.
 
@@ -22,12 +21,9 @@ def create_app(config_name=Config.ENV):
     
     # Initialize Flask extensions
     initialize_extensions(app)
-    
-    # Set up CORS. Allow '*' for origins.
-    cors = CORS(app, resources={r"/*": {"origins": Config.CLIENT_ORIGINS}}, supports_credentials=True)
 
-    # Use the after_request decorator to set Access-Control-Allow
-    app.after_request(set_access_control_allows)
+    # Register before and after request hooks
+    register_hooks(app=app)
     
     
     # Configure logging
@@ -35,10 +31,11 @@ def create_app(config_name=Config.ENV):
     
     
     # Register blueprints
-    from .core import register_all_blueprints
+    from .blueprints import register_all_blueprints
     register_all_blueprints(app)
     
-    # with app.app_context():
-    #     create_roles()  # Create roles for trendit3
+    if create_defaults:
+        with app.app_context():
+            create_roles()
     
     return app
