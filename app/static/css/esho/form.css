@@ -1,0 +1,48 @@
+/* Forms */
+.form-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 0px 1.2em;
+}
+.form-grid-row {
+    display: -moz-grid;
+    display: -ms-grid;
+    display: grid;
+    gap: 0px 1.2em;
+    grid-template-columns: repeat(auto-fit, minmax(21ch, 1fr));
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-element {
+    --input-radius: 0rem
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-clip: padding-box;
+    border-radius: var(--input-radius);
+    outline: none;
+    font-family: var(--font-four);
+    border: 1px solid var(--outline);
+    color: var(--body-txt-clr);
+    background-color: var(--box-bg-clr);
+    transition: var(--transition);
+}
+.form-element:focus {
+    outline: 0;
+    border: 1px solid var(--theme-clr);
+}
+
+.form-element.pill {
+    --input-radius: 10em;
+}
+.form-element.rounded {
+    --input-radius: calc(var(--round-conners) - 14px);
+}
