@@ -38,9 +38,9 @@ class SuperAdminModelView(ModelView):
         console_log(str(current_user))
         return redirect(url_for('cpanel.login', next=request.url)) # Redirect to login page if user doesn't have access
     
-    # list_template = "panel/model/list.html"
-    # edit_template = "panel/model/edit.html"
-    # create_template = "panel/model/create.html"
+    list_template = "cpanel/model/list.html"
+    edit_template = "cpanel/model/edit.html"
+    create_template = "cpanel/model/create.html"
     
     # can_export = True
     edit_modal = True

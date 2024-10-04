@@ -6,16 +6,21 @@ as well as methods for password hashing and verification.
 
 @author Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package QUAS
 '''
 
 from enum import Enum
+from flask import current_app
+from slugify import slugify
 from sqlalchemy.orm import backref
+from sqlalchemy import inspect, or_
 from ..utils.date_time import DateTimeUtils
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 from ..extensions import db
 from .media import Media
+from .role import Role, RoleNames
+from ..utils.helpers.loggers import console_log
 from config import Config
 
 class TempUser(db.Model):
@@ -35,7 +40,7 @@ class TempUser(db.Model):
             'date_joined': self.date_joined,
         }
 
-class AppUser(db.Model):
+class AppUser(db.Model, UserMixin):
     
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
@@ -58,7 +63,7 @@ class AppUser(db.Model):
     def password(self, password):
         self.password_hash = generate_password_hash(password)
     
-    def verify_password(self, password) -> bool:
+    def check_password(self, password) -> bool:
         '''
         #This returns True if the password is same as hashed password in the database.
         '''
@@ -68,6 +73,24 @@ class AppUser(db.Model):
     def role_names(self) -> list[str]:
         """Returns a list of role names for the user."""
         return [str(role.name.value) for role in self.roles]
+    
+    def __str__(self) -> str:
+        return self.name.capitalize()
+    
+    @staticmethod
+    def add_search_filters(query, search_term):
+        """
+        Adds search filters to a SQLAlchemy query.
+        """
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                    or_(
+                        AppUser.username.ilike(search_term),
+                        AppUser.email.ilike(search_term)
+                    )
+                )
+        return query
     
     
     def __repr__(self) -> str:
@@ -170,3 +193,38 @@ class Address(db.Model):
         }
 
 
+def create_default_super_admin(clear: bool = False) -> None:
+    if inspect(db.engine).has_table('role'):
+        super_admin_role = Role.query.filter_by(name=RoleNames.SUPER_ADMIN).first()
+        
+        if not super_admin_role:
+            super_admin_role = Role(
+                name=RoleNames.SUPER_ADMIN,
+                slug=slugify(RoleNames.SUPER_ADMIN.value)
+            )
+            db.session.add(super_admin_role)
+            db.session.commit()
+        
+    if inspect(db.engine).has_table('app_user'):
+        super_admin = AppUser.query.join(AppUser.roles).filter(Role.name == RoleNames.SUPER_ADMIN).first()
+        
+        if clear and super_admin:
+            # Clear existing super admin before creating new ones
+            super_admin.delete()
+            db.session.close()
+            console_log(data="Super Admin deleted successfully")
+            return
+        
+        if not super_admin:
+            super_admin = AppUser(
+                username=current_app.config['DEFAULT_SUPER_ADMIN_USERNAME'],
+                email='admin@admin.com'
+            )
+            super_admin.password = current_app.config['DEFAULT_SUPER_ADMIN_PASSWORD']
+            super_admin.roles.append(super_admin_role)
+            
+            db.session.add(super_admin)
+            db.session.commit()
+            console_log(data="Admin user created with default credentials")
+        else:
+            console_log(data="Admin user already exists")

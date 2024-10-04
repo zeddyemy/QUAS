@@ -1,4 +1,9 @@
 /* Forms */
+.form-heading {
+    margin: 0px 0px 30px;
+    font-size: 1.5rem;
+}
+
 .form-row {
     display: -webkit-box;
     display: -ms-flexbox;

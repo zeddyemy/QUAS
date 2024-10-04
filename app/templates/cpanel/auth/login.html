@@ -1,32 +1,34 @@
 {% extends 'api/base/base.jinja-html' %}
 {% block title %}Cpanel Login - {{ super() }}{% endblock %}
 {% block styles_script %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/esho/form.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<div class="full-height flex flex-center">
-    <div class="form-wrapper">
-        <form method="post" class="form card" id="login-form" enctype="multipart/form-data">
+<div class="parent-container">
+    <div class="full-height flex flex-center">
+        <div class="form-wrapper card auth-card">
             <div class="card-body">
-                {{ form.csrf_token }}
-                <h3 class="form-heading">Login</h3>
-                <div class="form-group">
-                    <label for="emailUsername">Email or Username</label>
-                    {{ form.email_username(class_ = 'form-element rounded', placeholder='example@mail.com', autofocus = true) }}
-                </div>
-
-                <div class="form-group">
-                    <label for="pwd">Password</label>
+                <form method="post" class="form" id="login-form" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <h3 class="form-heading">Login</h3>
                     <div class="form-group">
-                        {{ form.pwd(class_ = 'form-element rounded', placeholder='password', autofocus = true) }}
+                        <label for="email_username">Email or Username</label>
+                        {{ form.email_username(class_ = 'form-element rounded', placeholder='example@mail.com', autofocus = true) }}
                     </div>
-                </div>
-
-                <button type="submit" value="Login" class="btn rounded"> Login </button>
+    
+                    <div class="form-group">
+                        <label for="pwd">Password</label>
+                        <div class="form-group">
+                            {{ form.pwd(class_ = 'form-element rounded', placeholder='password', autofocus = true) }}
+                        </div>
+                    </div>
+    
+                    <button type="submit" value="Login" class="btn rounded"> Login </button>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

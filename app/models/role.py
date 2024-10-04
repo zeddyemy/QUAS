@@ -7,7 +7,7 @@ from ..extensions import db
 class RoleNames(Enum):
     """ENUMS for the name filed in Role Model"""
     SUPER_ADMIN = 'Super Admin'
-    Admin = 'Admin'
+    ADMIN = 'Admin'
     JUNIOR_ADMIN = 'Junior Admin'
     CUSTOMER = 'Customer'
 
@@ -23,6 +23,9 @@ class Role(db.Model):
     name = db.Column(db.Enum(RoleNames), unique=True, nullable=False)
     slug = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.String(100), nullable=True)
+    
+    def __str__(self) -> str:
+        return self.name.value.capitalize()
 
 
 

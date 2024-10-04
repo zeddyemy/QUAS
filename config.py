@@ -11,6 +11,9 @@ class Config:
     
     CLIENT_ORIGINS = os.getenv('CLIENT_ORIGINS') or os.environ.get('CLIENT_ORIGINS') or 'http://localhost:3000,http://localhost:5173'
     CLIENT_ORIGINS = [origin.strip() for origin in CLIENT_ORIGINS.split(',')]
+    
+    DEFAULT_SUPER_ADMIN_USERNAME = os.getenv("DEFAULT_SUPER_ADMIN_USERNAME")
+    DEFAULT_SUPER_ADMIN_PASSWORD = os.getenv("DEFAULT_SUPER_ADMIN_PASSWORD")
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or "sqlite:///db.sqlite3"

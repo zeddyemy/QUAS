@@ -1,11 +1,11 @@
 {% extends 'api/base/base.jinja-html' %}
-{% block title %}Trendit³ - {{ super() }}{% endblock %}
+{% block title %}QUAS - {{ super() }}{% endblock %}
 
 {% block content %}
 
-<div class="h-full flex flexCenter">
+<div class="full-height flex flex-center">
     <div class="card api-box">
-        <div class="logo fitImg">
+        <div class="logo fit-img">
             <img src="{{ url_for('static', filename='img/api-setup.jpg') }}" alt="API Logo">
         </div>
         <h1 class="title"> API Setup </h1>

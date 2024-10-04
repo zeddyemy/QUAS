@@ -24,7 +24,7 @@
             {% for category, message in messages %}
             <div class="alert fade {{ category }} visible">
                 <div class="alertTxt">
-                    {{ message }} {% if category == 'info login' %} Go to <a href="{{ url_for('panel.login') }}"> login
+                    {{ message }} {% if category == 'info login' %} Go to <a href="{{ url_for('cpanel.login') }}"> login
                         page</a> {% endif %}
                 </div>
                 <a class="close" data-dismiss="alert">&times;</a>

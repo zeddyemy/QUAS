@@ -11,5 +11,8 @@ flask_app_admin = Admin(name="Cpanel", index_view=AppAdminIndexView(template="cp
 def setup_flask_admin(app):
     flask_app_admin.init_app(app)
     
+    # Add custom links
+    flask_app_admin.add_link(MenuLink(name='Logout', category='', url='/cpanel/logout'))
+    
     # Add views with restricted access
     flask_app_admin.add_view(UserView(AppUser, db.session, "Users"))

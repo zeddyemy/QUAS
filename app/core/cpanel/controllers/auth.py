@@ -21,7 +21,7 @@ class CPanelAuthController:
             if form.validate_on_submit():
                 console_log("form", request.form)
                 
-                email_phone = form.email_phone.data
+                email_username = form.email_username.data
                 pwd = form.pwd.data
                 
                 
@@ -32,17 +32,17 @@ class CPanelAuthController:
                 
                 
                 # get user from db with the email/username.
-                user = get_app_user(email_phone)
+                user = get_app_user(email_username)
                 
                 if user:
                     if user.check_password(pwd):
                         login_user(user)
-                        flash("Welcome back " + user.name, "success")
+                        flash("Welcome back " + user.username, "success")
                         return redirect(next)
                     else:
                         flash("Incorrect password", "error")
                 else:
-                    flash("Email or Phone No. is incorrect or doesn't exist", "error")
+                    flash("Email or Username is incorrect or doesn't exist", "error")
                 
             else:
                 console_log("Form Errors", form.errors)

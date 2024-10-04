@@ -7,6 +7,6 @@ def login():
     return CPanelAuthController.login()
 
 
-@cpanel_bp.route("/login", methods=["GET", "POST"])
+@cpanel_bp.route("/logout", methods=["GET", "POST"])
 def logout():
     return CPanelAuthController.logout()

@@ -2,7 +2,7 @@ from flask import Flask
 
 from .extensions import initialize_extensions
 from config import Config, config_by_name, configure_logging
-from .models import create_roles
+from .models import create_db_defaults
 from .core.cpanel.setup import setup_flask_admin
 from .utils.hooks import register_hooks
 
@@ -35,7 +35,6 @@ def create_app(config_name=Config.ENV, create_defaults=True):
     
     # create defaults
     if create_defaults:
-        with app.app_context():
-            create_roles()
+        create_db_defaults(app)
     
     return app
