@@ -1,3 +1,5 @@
+pip
+autopep8
 cloudinary==1.38.0
 Deprecated==1.2.14
 email_validator==2.2.0
