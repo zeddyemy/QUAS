@@ -31,12 +31,6 @@ limiter = Limiter(key_func=get_remote_address)
 login_manager = LoginManager()
 
 def initialize_extensions(app: Flask):
-    """
-    initializes the extensions used in the Flask application.
-    
-    Return: None
-    """
-    
     db.init_app(app)
     mail.init_app(app)
     limiter.init_app(app)

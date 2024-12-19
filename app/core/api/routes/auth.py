@@ -16,8 +16,8 @@ from ..controllers import AuthController
 
 # REGISTRATION ENDPOINTS
 @api_bp.route("/signup", methods=['POST'])
-def sign_up():
-    return AuthController.sign_up()
+def signUp():
+    return AuthController.signUp()
 
 # AUTHENTICATION ENDPOINTS
 @api_bp.route("/login", methods=['POST'])

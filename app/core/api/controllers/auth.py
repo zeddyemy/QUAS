@@ -26,9 +26,9 @@ from ....utils.helpers.users import get_app_user
 
 class AuthController:
     @staticmethod
-    def sign_up():
+    def signUp():
         """
-        Handle user sign_up by collecting email and referral code, 
+        Handle user signup by collecting email and referral code, 
         checking for existing users, and sending a verification code.
         """
         try:

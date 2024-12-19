@@ -11,9 +11,6 @@ from flask import Flask
 from .media import Media
 from .user import AppUser, Profile, Address, create_default_super_admin
 from .role import Role, RoleNames, user_roles,  create_roles
-from .annotation import Annotation
-from .project import Project
-from .task import Task
 
 
 def create_db_defaults(app: Flask) -> None:
