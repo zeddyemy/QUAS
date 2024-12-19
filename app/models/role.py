@@ -8,8 +8,7 @@ class RoleNames(Enum):
     """ENUMS for the name filed in Role Model"""
     SUPER_ADMIN = 'Super Admin'
     ADMIN = 'Admin'
-    JUNIOR_ADMIN = 'Junior Admin'
-    CUSTOMER = 'Customer'
+    ANNOTATOR = 'Annotator'
 
 # Association table for the many-to-many relationship
 user_roles = db.Table('user_roles',
@@ -19,13 +18,21 @@ user_roles = db.Table('user_roles',
 
 class Role(db.Model):
     """ Role data model """
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Enum(RoleNames), unique=True, nullable=False)
-    slug = db.Column(db.String(100), unique=True, nullable=False)
-    description = db.Column(db.String(100), nullable=True)
+    id: int = db.Column(db.Integer, primary_key=True)
+    name: RoleNames = db.Column(db.Enum(RoleNames), unique=True, nullable=False)
+    slug: str = db.Column(db.String(100), unique=True, nullable=False)
+    description: str = db.Column(db.String(100), nullable=True)
     
     def __str__(self) -> str:
         return self.name.value.capitalize()
+    
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name.value,
+            'slug': self.slug,
+            'description': self.description,
+        }
 
 
 

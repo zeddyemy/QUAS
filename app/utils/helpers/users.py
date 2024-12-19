@@ -8,10 +8,22 @@ These functions assist with tasks such as:
 
 @author: Emmanuel Olowu
 @link: https://github.com/zeddyemy
-@package: QUAS
 '''
 
+from typing import List
+from flask_jwt_extended import get_jwt_identity
+
 from ...models import AppUser
+from .loggers import console_log
+
+def get_current_user() -> AppUser:
+    jwt_identity = get_jwt_identity()
+    
+    current_user_id = jwt_identity.get("user_id", 0)
+    current_user: AppUser = AppUser.query.get(current_user_id)
+    
+    return current_user
+
 
 def get_user_info(user_id: int) -> dict:
     """Gets profile details of a particular user"""
@@ -27,6 +39,7 @@ def get_user_info(user_id: int) -> dict:
             user_info[key] = ""
     
     return user_info
+
 
 def is_user_exist(identifier: str, field: str, user: AppUser | None = None):
     """
@@ -44,6 +57,7 @@ def is_user_exist(identifier: str, field: str, user: AppUser | None = None):
     if user:
         base_query = base_query.filter(AppUser.id != user.id)
     return base_query.scalar() is not None
+
 
 def is_username_exist(username: str, user: AppUser | None = None):
     """
@@ -81,6 +95,7 @@ def is_email_exist(email: str, user: AppUser | None = None):
         base_query = base_query.filter(AppUser.id != user.id)
     
     return base_query.scalar() is not None
+
 
 def get_app_user(email_username: str) -> AppUser:
     """
